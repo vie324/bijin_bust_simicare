@@ -10,16 +10,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #8FBCB9;
-            --primary-dark: #6A9E9A;
-            --primary-light: #B5D5D3;
-            --primary-pale: #E8F4F3;
-            --primary-bg: #F5FAF9;
-            --accent: #C4956A;
-            --accent-light: #E2C9AD;
-            --warm-brown: #5D4A3C;
-            --text-muted: #7A6E65;
-            --text-light: #A39890;
+            --primary: #80D8D1;
+            --primary-dark: #5BBFB8;
+            --primary-light: #A8E6E1;
+            --primary-pale: #E0F7F5;
+            --primary-bg: #F3FCFB;
+            --accent: #E8A87C;
+            --accent-light: #F2CEAE;
+            --warm-brown: #3D4F4E;
+            --text-muted: #5A706E;
+            --text-light: #8FA5A3;
         }
 
         body {
@@ -94,13 +94,13 @@
 
         .phase-card:hover {
             transform: translateX(4px);
-            box-shadow: 0 4px 20px rgba(143, 188, 185, 0.15);
+            box-shadow: 0 4px 20px rgba(128, 216, 209, 0.15);
         }
 
         .phase-card.active-phase {
             border-left: 6px solid var(--primary);
             background-color: #FFF;
-            box-shadow: 0 8px 24px rgba(143, 188, 185, 0.2);
+            box-shadow: 0 8px 24px rgba(128, 216, 209, 0.2);
         }
 
         .phase-card.active-phase::before {
@@ -257,7 +257,7 @@
 
         /* Glow effect */
         .glow-soft {
-            box-shadow: 0 0 40px rgba(143, 188, 185, 0.15), 0 0 80px rgba(143, 188, 185, 0.05);
+            box-shadow: 0 0 40px rgba(128, 216, 209, 0.15), 0 0 80px rgba(128, 216, 209, 0.05);
         }
 
         /* Scroll indicator */
@@ -457,7 +457,7 @@
                                     <span class="legend-color-box" style="background: #999; border: 2px dashed #999;"></span>間隔が空いた場合
                                 </div>
                                 <div class="chart-legend-item">
-                                    <span class="legend-color-box" style="background: rgba(196, 149, 106, 0.4);"></span>ターンオーバー周期
+                                    <span class="legend-color-box" style="background: rgba(232, 168, 124, 0.4);"></span>ターンオーバー周期
                                 </div>
                             </div>
                         </div>
@@ -598,13 +598,13 @@
                         {
                             label: '理想的な改善（週1→月2→月1）',
                             data: idealDataPoints,
-                            borderColor: '#8FBCB9',
-                            backgroundColor: 'rgba(143, 188, 185, 0.15)',
+                            borderColor: '#80D8D1',
+                            backgroundColor: 'rgba(128, 216, 209, 0.15)',
                             borderWidth: 3,
                             tension: 0.4,
                             fill: true,
                             pointBackgroundColor: '#FFF',
-                            pointBorderColor: '#8FBCB9',
+                            pointBorderColor: '#80D8D1',
                             pointBorderWidth: 2,
                             pointRadius: 5,
                             pointHoverRadius: 8,
@@ -628,8 +628,8 @@
                         {
                             label: 'ターンオーバー周期',
                             data: generateTurnoverData(),
-                            borderColor: 'rgba(196, 149, 106, 0.3)',
-                            backgroundColor: 'rgba(196, 149, 106, 0.08)',
+                            borderColor: 'rgba(232, 168, 124, 0.3)',
+                            backgroundColor: 'rgba(232, 168, 124, 0.08)',
                             borderWidth: 0,
                             fill: true,
                             tension: 0.5,
@@ -649,7 +649,7 @@
                     plugins: {
                         legend: { display: false },
                         tooltip: {
-                            backgroundColor: 'rgba(93, 74, 60, 0.9)',
+                            backgroundColor: 'rgba(61, 79, 78, 0.9)',
                             titleFont: { family: "'Noto Sans JP', sans-serif" },
                             bodyFont: { family: "'Noto Sans JP', sans-serif" },
                             cornerRadius: 8,
@@ -677,14 +677,14 @@
                                     xMax: 6,
                                     yMin: 0,
                                     yMax: 110,
-                                    borderColor: 'rgba(196, 149, 106, 0.5)',
+                                    borderColor: 'rgba(232, 168, 124, 0.5)',
                                     borderWidth: 2,
                                     borderDash: [4, 4],
                                     label: {
                                         display: true,
                                         content: '効果実感ライン',
                                         position: 'start',
-                                        backgroundColor: 'rgba(196, 149, 106, 0.85)',
+                                        backgroundColor: 'rgba(232, 168, 124, 0.85)',
                                         color: 'white',
                                         font: { size: 11, family: "'Noto Sans JP', sans-serif", weight: 'bold' },
                                         padding: { x: 8, y: 4 },
@@ -707,12 +707,12 @@
                                     return '';
                                 },
                                 font: { family: "'Noto Sans JP', sans-serif", size: 11 },
-                                color: '#7A6E65',
+                                color: '#5A706E',
                                 maxRotation: 0
                             },
                             grid: {
                                 display: true,
-                                color: 'rgba(143, 188, 185, 0.08)',
+                                color: 'rgba(128, 216, 209, 0.08)',
                             }
                         },
                         y: {
@@ -726,10 +726,10 @@
                                     return '';
                                 },
                                 font: { family: "'Noto Sans JP', sans-serif", size: 10 },
-                                color: '#A39890'
+                                color: '#8FA5A3'
                             },
                             grid: {
-                                color: 'rgba(143, 188, 185, 0.08)',
+                                color: 'rgba(128, 216, 209, 0.08)',
                             },
                             title: {
                                 display: true,
@@ -777,7 +777,7 @@
                 xMax: data.highlightRange.max,
                 yMin: 0,
                 yMax: 110,
-                backgroundColor: 'rgba(143, 188, 185, 0.1)',
+                backgroundColor: 'rgba(128, 216, 209, 0.1)',
                 borderColor: 'transparent'
             };
 
