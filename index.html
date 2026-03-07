@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>シミケアZERO美人 - シミケアロードマップ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@2.1.0/dist/chartjs-plugin-annotation.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #8FBCB9;
+            --primary-dark: #6A9E9A;
+            --primary-light: #B5D5D3;
+            --primary-pale: #E8F4F3;
+            --primary-bg: #F5FAF9;
+            --accent: #C4956A;
+            --accent-light: #E2C9AD;
+            --warm-brown: #5D4A3C;
+            --text-muted: #7A6E65;
+            --text-light: #A39890;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--warm-brown);
+            overflow-x: hidden;
+        }
+
+        .font-display {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Animated gradient background */
+        .hero-gradient {
+            background: linear-gradient(135deg, var(--primary-pale) 0%, #F0F7F6 25%, #FFF 50%, var(--primary-pale) 75%, #F0F7F6 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 12s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Floating particles */
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0;
+            animation: floatUp 6s ease-in-out infinite;
+        }
+
+        @keyframes floatUp {
+            0% { opacity: 0; transform: translateY(0) scale(0.5); }
+            20% { opacity: 0.6; }
+            80% { opacity: 0.3; }
+            100% { opacity: 0; transform: translateY(-120px) scale(1.2); }
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            max-height: 500px;
+        }
+
+        /* Phase card styling */
+        .phase-card {
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            border-left: 4px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .phase-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, transparent 60%, var(--primary-pale));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .phase-card:hover::before {
+            opacity: 1;
+        }
+
+        .phase-card:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 20px rgba(143, 188, 185, 0.15);
+        }
+
+        .phase-card.active-phase {
+            border-left: 6px solid var(--primary);
+            background-color: #FFF;
+            box-shadow: 0 8px 24px rgba(143, 188, 185, 0.2);
+        }
+
+        .phase-card.active-phase::before {
+            opacity: 1;
+        }
+
+        .step-badge {
+            font-size: 0.7rem;
+            padding: 2px 10px;
+            border-radius: 9999px;
+            background-color: var(--primary-pale);
+            color: var(--primary-dark);
+            transition: all 0.3s ease;
+        }
+
+        .active-phase .step-badge {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        /* Chart legend */
+        .chart-legend-item {
+            display: flex;
+            align-items: center;
+            font-size: 0.75rem;
+            margin-right: 12px;
+            color: #666;
+        }
+
+        .legend-color-box {
+            width: 12px;
+            height: 12px;
+            margin-right: 4px;
+            border-radius: 2px;
+        }
+
+        /* Shimmer effect on header */
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .shimmer-text {
+            background: linear-gradient(90deg, var(--primary-dark) 0%, var(--accent) 50%, var(--primary-dark) 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shimmer 4s linear infinite;
+        }
+
+        /* Pulse ring on milestone */
+        @keyframes pulseRing {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(2.5); opacity: 0; }
+        }
+
+        .milestone-ring {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid var(--primary);
+            animation: pulseRing 2s ease-out infinite;
+        }
+
+        /* Fade in up animation */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        .delay-1 { animation-delay: 0.2s; opacity: 0; }
+        .delay-2 { animation-delay: 0.4s; opacity: 0; }
+        .delay-3 { animation-delay: 0.6s; opacity: 0; }
+        .delay-4 { animation-delay: 0.8s; opacity: 0; }
+
+        /* Timeline progress bar */
+        .timeline-progress {
+            position: relative;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 50%, var(--primary-light) 100%);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .timeline-progress::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 30%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+            animation: shimmer 2s linear infinite;
+            background-size: 200% 100%;
+        }
+
+        /* Toggle switch */
+        .toggle-switch {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            background: #D1D5DB;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .toggle-switch.active {
+            background: var(--primary);
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        }
+
+        .toggle-switch.active::after {
+            transform: translateX(20px);
+        }
+
+        /* Skin cell turnover animation */
+        @keyframes cellRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .cell-orbit {
+            animation: cellRotate 20s linear infinite;
+        }
+
+        /* Responsive */
+        @media (min-width: 768px) and (max-width: 1400px) and (orientation: landscape) {
+            body { font-size: 15px; }
+            .phase-card { padding: 14px 16px; }
+            .chart-container { height: 360px; }
+        }
+
+        @media (min-width: 768px) {
+            .phase-card { min-height: 44px; }
+        }
+
+        /* Glow effect */
+        .glow-soft {
+            box-shadow: 0 0 40px rgba(143, 188, 185, 0.15), 0 0 80px rgba(143, 188, 185, 0.05);
+        }
+
+        /* Scroll indicator */
+        @keyframes scrollBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(8px); }
+        }
+
+        .scroll-indicator {
+            animation: scrollBounce 2s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white/80 backdrop-blur-md shadow-sm py-3 sticky top-0 z-50 border-b" style="border-color: var(--primary-light);">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <a href="#" class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background: linear-gradient(135deg, var(--primary), var(--primary-dark));">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold tracking-wider" style="color: var(--primary-dark);">シミケアZERO美人</h1>
+                    <span class="text-xs" style="color: var(--text-light);">表参道店</span>
+                </div>
+            </a>
+            <nav class="flex items-center space-x-4 text-sm" style="color: var(--text-muted);">
+                <a href="#roadmap" class="hover:opacity-70 transition py-2 px-2 font-medium" style="color: var(--primary-dark);">来店ロードマップ</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+
+        <!-- Hero Section -->
+        <section class="hero-gradient relative py-16 lg:py-20 overflow-hidden">
+            <!-- Floating decorative elements -->
+            <div class="absolute inset-0 pointer-events-none overflow-hidden">
+                <div class="particle w-3 h-3" style="background: var(--primary-light); left: 10%; top: 60%; animation-delay: 0s;"></div>
+                <div class="particle w-2 h-2" style="background: var(--accent-light); left: 25%; top: 70%; animation-delay: 1.5s;"></div>
+                <div class="particle w-4 h-4" style="background: var(--primary-pale); left: 75%; top: 50%; animation-delay: 3s;"></div>
+                <div class="particle w-2 h-2" style="background: var(--primary-light); left: 85%; top: 65%; animation-delay: 4.5s;"></div>
+                <div class="particle w-3 h-3" style="background: var(--accent-light); left: 50%; top: 75%; animation-delay: 2s;"></div>
+            </div>
+
+            <!-- Decorative circles -->
+            <div class="absolute -top-20 -right-20 w-64 h-64 rounded-full opacity-20" style="background: radial-gradient(circle, var(--primary-light), transparent);"></div>
+            <div class="absolute -bottom-10 -left-10 w-48 h-48 rounded-full opacity-15" style="background: radial-gradient(circle, var(--accent-light), transparent);"></div>
+
+            <div class="container mx-auto px-4 text-center relative z-10">
+                <div class="fade-in-up">
+                    <p class="text-sm tracking-[0.3em] mb-4 font-medium" style="color: var(--primary-dark);">SKINCARE ROADMAP</p>
+                </div>
+                <h2 class="text-3xl lg:text-4xl font-light mb-6 fade-in-up delay-1" style="color: var(--warm-brown);">
+                    シミのない透明肌へ、<br class="md:hidden"><span class="shimmer-text font-display font-bold">1年間の美肌プログラム</span>
+                </h2>
+                <p class="fade-in-up delay-2 leading-relaxed max-w-2xl mx-auto" style="color: var(--text-muted);">
+                    NIR（近赤外線）照射と光フォトの<br class="md:hidden">ダブルアプローチで、<br>
+                    肌のターンオーバーを整え、<br class="md:hidden">半年で実感できる透明感を。
+                </p>
+
+                <!-- Scroll indicator -->
+                <div class="mt-10 scroll-indicator fade-in-up delay-3">
+                    <svg class="w-6 h-6 mx-auto" style="color: var(--primary);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <div class="container mx-auto px-4 py-10 space-y-10">
+
+            <!-- Skin Turnover Info -->
+            <section class="fade-in-up delay-4">
+                <div class="bg-white rounded-3xl p-6 lg:p-8 shadow-sm border glow-soft relative overflow-hidden" style="border-color: var(--primary-light);">
+                    <!-- Decorative -->
+                    <div class="absolute -top-8 -right-8 w-32 h-32 rounded-full opacity-10" style="background: var(--primary);"></div>
+
+                    <div class="grid md:grid-cols-3 gap-6 relative z-10">
+                        <div class="text-center p-6 rounded-2xl" style="background: var(--primary-pale);">
+                            <div class="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center relative" style="background: linear-gradient(135deg, var(--primary), var(--primary-dark));">
+                                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                </svg>
+                            </div>
+                            <h4 class="font-bold mb-2" style="color: var(--warm-brown);">NIR近赤外線照射</h4>
+                            <p class="text-sm" style="color: var(--text-muted);">肌の深層にアプローチし、メラニンの生成を抑制</p>
+                        </div>
+                        <div class="text-center p-6 rounded-2xl" style="background: var(--primary-pale);">
+                            <div class="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style="background: linear-gradient(135deg, var(--primary), var(--primary-dark));">
+                                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+                                </svg>
+                            </div>
+                            <h4 class="font-bold mb-2" style="color: var(--warm-brown);">光フォト照射</h4>
+                            <p class="text-sm" style="color: var(--text-muted);">表層のシミにダイレクトに働きかけ、くすみを改善</p>
+                        </div>
+                        <div class="text-center p-6 rounded-2xl" style="background: var(--primary-pale);">
+                            <div class="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style="background: linear-gradient(135deg, var(--accent), var(--accent-light));">
+                                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                                </svg>
+                            </div>
+                            <h4 class="font-bold mb-2" style="color: var(--warm-brown);">ターンオーバー促進</h4>
+                            <p class="text-sm" style="color: var(--text-muted);">約28日の肌周期に合わせた最適な施術タイミング</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Roadmap Section -->
+            <section id="roadmap" class="bg-white rounded-3xl p-6 lg:p-8 shadow-md border glow-soft" style="border-color: var(--primary-light);">
+                <div class="mb-6 border-b pb-4" style="border-color: var(--primary-pale);">
+                    <h3 class="text-xl font-bold flex items-center gap-2" style="color: var(--primary-dark);">
+                        <span class="font-display text-2xl">01</span> シミケア来店ロードマップ
+                    </h3>
+                    <p class="text-sm mt-2" style="color: var(--text-light);">
+                        理想的な来店ペースと、間隔が空いてしまった場合の違いをグラフで比較できます。<br>
+                        肌のターンオーバー周期（約28日）に合わせた施術スケジュールで、半年後に実感を。
+                    </p>
+
+                    <!-- Timeline progress indicator -->
+                    <div class="mt-4 max-w-2xl">
+                        <div class="flex justify-between text-xs mb-1" style="color: var(--text-light);">
+                            <span>開始</span>
+                            <span class="font-bold" style="color: var(--accent);">← 効果実感 →</span>
+                            <span>1年後</span>
+                        </div>
+                        <div class="timeline-progress"></div>
+                        <div class="flex justify-between mt-1">
+                            <div class="w-2 h-2 rounded-full" style="background: var(--primary);"></div>
+                            <div class="w-2 h-2 rounded-full" style="background: var(--accent);"></div>
+                            <div class="w-2 h-2 rounded-full" style="background: var(--primary-light);"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid lg:grid-cols-12 gap-8 items-start">
+                    <!-- Left: Phase Controls -->
+                    <div class="lg:col-span-4 space-y-4">
+                        <button onclick="updatePhase(0)" id="btn-phase-1" class="phase-card w-full text-left p-4 rounded-xl border transition active-phase" style="border-color: var(--primary-light);">
+                            <div class="flex justify-between items-center mb-1 relative z-10">
+                                <span class="step-badge">1〜2ヶ月目</span>
+                                <span class="text-xs font-bold" style="color: var(--primary-dark);">Step 1</span>
+                            </div>
+                            <h4 class="font-bold text-lg relative z-10" style="color: var(--warm-brown);">集中ケア期</h4>
+                            <p class="text-xs mt-1 relative z-10" style="color: var(--text-muted);">ターンオーバーを活性化させる時期</p>
+                            <div class="mt-2 text-xs font-bold inline-block px-2 py-1 rounded relative z-10" style="color: var(--primary-dark); background: var(--primary-pale);">来店目安: 週に1回</div>
+                        </button>
+
+                        <button onclick="updatePhase(1)" id="btn-phase-2" class="phase-card w-full text-left p-4 rounded-xl border transition" style="border-color: var(--primary-pale);">
+                            <div class="flex justify-between items-center mb-1 relative z-10">
+                                <span class="step-badge">3〜6ヶ月目</span>
+                                <span class="text-xs font-bold" style="color: var(--primary-dark);">Step 2</span>
+                            </div>
+                            <h4 class="font-bold text-lg relative z-10" style="color: var(--warm-brown);">改善・実感期</h4>
+                            <p class="text-xs mt-1 relative z-10" style="color: var(--text-muted);">シミが薄くなり始める実感の時期</p>
+                            <div class="mt-2 text-xs font-bold inline-block px-2 py-1 rounded relative z-10" style="color: var(--primary-dark); background: var(--primary-pale);">来店目安: 月に2回</div>
+                        </button>
+
+                        <button onclick="updatePhase(2)" id="btn-phase-3" class="phase-card w-full text-left p-4 rounded-xl border transition" style="border-color: var(--primary-pale);">
+                            <div class="flex justify-between items-center mb-1 relative z-10">
+                                <span class="step-badge">7〜12ヶ月目</span>
+                                <span class="text-xs font-bold" style="color: var(--primary-dark);">Step 3</span>
+                            </div>
+                            <h4 class="font-bold text-lg relative z-10" style="color: var(--warm-brown);">メンテナンス期</h4>
+                            <p class="text-xs mt-1 relative z-10" style="color: var(--text-muted);">透明感を維持し、新たなシミを予防</p>
+                            <div class="mt-2 text-xs font-bold inline-block px-2 py-1 rounded relative z-10" style="color: var(--primary-dark); background: var(--primary-pale);">来店目安: 月に1回</div>
+                        </button>
+
+                        <!-- Toggle for irregular pattern -->
+                        <div class="mt-6 p-4 rounded-xl border" style="background: #FAFAFA; border-color: #E8E8E8;">
+                            <label class="flex items-center cursor-pointer gap-3" onclick="toggleIrregularDataset()">
+                                <div id="toggle-switch" class="toggle-switch"></div>
+                                <span class="text-sm font-medium" style="color: var(--text-muted);">「来店間隔が乱れた場合」を表示</span>
+                            </label>
+                            <p class="text-xs mt-2 pl-12" style="color: var(--text-light);">ターンオーバー周期に合わない施術間隔だと、効果が出にくくなります。</p>
+                        </div>
+                    </div>
+
+                    <!-- Right: Chart & Details -->
+                    <div class="lg:col-span-8 flex flex-col h-full">
+                        <!-- Chart Area -->
+                        <div class="bg-white rounded-xl p-2 mb-4 relative">
+                            <div class="chart-container">
+                                <canvas id="cycleChart"></canvas>
+                            </div>
+                            <!-- Custom Legend -->
+                            <div class="flex flex-wrap justify-center mt-3 gap-y-2">
+                                <div class="chart-legend-item">
+                                    <span class="legend-color-box" style="background: var(--primary);"></span>理想的な改善
+                                </div>
+                                <div class="chart-legend-item">
+                                    <span class="legend-color-box" style="background: #999; border: 2px dashed #999;"></span>間隔が空いた場合
+                                </div>
+                                <div class="chart-legend-item">
+                                    <span class="legend-color-box" style="background: rgba(196, 149, 106, 0.4);"></span>ターンオーバー周期
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Detail Text Area -->
+                        <div id="phase-detail-content" class="p-5 rounded-xl border-l-4 flex-grow shadow-inner" style="background: var(--primary-pale); border-color: var(--primary);">
+                            <div class="mb-3">
+                                <h4 id="detail-title" class="font-bold text-lg" style="color: var(--warm-brown);">集中ケア期：肌の土台づくり</h4>
+                                <p id="detail-text" class="text-sm mt-2 leading-relaxed" style="color: var(--text-muted);">
+                                    蓄積されたメラニンに集中的にアプローチ。NIR照射で深層のシミに働きかけ、光フォトで表層のくすみを改善します。
+                                </p>
+                            </div>
+                            <div class="border-t border-dashed pt-3" style="border-color: var(--primary-light);">
+                                <div class="flex items-start gap-3">
+                                    <span class="text-white text-xs font-bold px-2 py-1 rounded mt-1 whitespace-nowrap" style="background: var(--primary);">Point</span>
+                                    <p id="detail-point" class="text-sm" style="color: var(--warm-brown);">
+                                        初回〜4回目：肌状態を見極め、NIR照射＋光フォトのダブルアプローチで集中ケア。ハーブピーリングの追加でターンオーバーを促進させると効果的です。
+                                    </p>
+                                </div>
+                            </div>
+                            <!-- Recommended menu -->
+                            <div class="mt-3 p-3 rounded-lg border" style="background: white; border-color: var(--primary-light);">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <svg class="w-4 h-4" style="color: var(--accent);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
+                                    </svg>
+                                    <span class="text-xs font-bold" style="color: var(--accent);">おすすめメニュー</span>
+                                </div>
+                                <p id="detail-menu" class="text-sm font-medium" style="color: var(--warm-brown);">徹底シミケア × 光フォト（ダブルアプローチ）</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Bottom CTA -->
+            <section class="text-center py-8">
+                <div class="bg-white rounded-3xl p-8 shadow-sm border glow-soft max-w-2xl mx-auto" style="border-color: var(--primary-light);">
+                    <div class="w-20 h-20 mx-auto mb-5 rounded-full flex items-center justify-center relative" style="background: var(--primary-pale);">
+                        <div class="absolute inset-0 rounded-full" style="border: 2px solid var(--primary); opacity: 0.3; animation: pulseRing 3s ease-out infinite;"></div>
+                        <svg class="w-9 h-9" style="color: var(--primary);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3" style="color: var(--warm-brown);">まずはお気軽にご相談ください</h3>
+                    <p class="text-sm mb-6 leading-relaxed" style="color: var(--text-muted);">
+                        お肌の状態に合わせた最適なプランをご提案いたします。<br>
+                        初回カウンセリングで、あなただけのシミケアロードマップを作成します。
+                    </p>
+                    <a href="https://beauty.hotpepper.jp/kr/slnH000740414/coupon/" target="_blank"
+                       class="inline-flex items-center gap-2 text-white font-bold px-8 py-3 rounded-full transition-all duration-300 hover:opacity-90 hover:shadow-lg"
+                       style="background: linear-gradient(135deg, var(--primary), var(--primary-dark));">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                        ご予約・クーポンはこちら
+                    </a>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-6 text-center text-xs" style="color: var(--text-light); background: var(--primary-pale);">
+        <p>&copy; シミケアZERO美人 表参道店</p>
+    </footer>
+
+    <script>
+        // --- Phase Data ---
+        const phaseDetails = [
+            {
+                title: "集中ケア期：肌の土台づくり",
+                desc: "蓄積されたメラニンに集中的にアプローチ。NIR照射で深層のシミに働きかけ、光フォトで表層のくすみを改善します。週1回の施術でターンオーバーを活性化させ、肌の土台を整えます。",
+                menu: "徹底シミケア × 光フォト（ダブルアプローチ）",
+                point: "初回〜4回目：肌状態を見極め、NIR照射＋光フォトのダブルアプローチで集中ケア。ハーブピーリングの追加でターンオーバーを促進させると効果的です。",
+                highlightRange: { min: 0, max: 2 }
+            },
+            {
+                title: "改善・実感期：シミが薄くなる実感",
+                desc: "ターンオーバーが正常化し始め、メラニンの排出が促進されます。シミの色が薄くなり、肌全体のトーンアップを実感できる時期です。月2回のペースで効果を定着させます。",
+                menu: "シミケア × 光フォト ＋ ガルバニック（EGF導入）",
+                point: "5〜12回目：肌の変化が見えてくるタイミング。ガルバニックによるEGF導入で細胞の再生力を高め、シミの排出をさらにサポートします。",
+                highlightRange: { min: 2, max: 6 }
+            },
+            {
+                title: "メンテナンス期：透明肌の維持",
+                desc: "シミが目立たなくなり、透明感のある肌が実感できる時期。月1回のメンテナンスで新たなシミの発生を予防し、美しい肌を維持していきます。",
+                menu: "シミケア ＋ 小顔コルギ ＋ 光フォト",
+                point: "13回目以降：小顔コルギとの組み合わせで、シミケアと同時にリフトアップ効果も。紫外線が強い季節は月2回のケアがおすすめです。",
+                highlightRange: { min: 6, max: 12 }
+            }
+        ];
+
+        // --- Chart Data ---
+        // X axis: months (0-12)
+        const idealDataPoints = [
+            {x: 0, y: 10}, {x: 0.5, y: 18}, {x: 1, y: 28}, {x: 1.5, y: 38}, {x: 2, y: 48},
+            {x: 3, y: 58}, {x: 4, y: 68}, {x: 5, y: 77}, {x: 6, y: 85},
+            {x: 7, y: 88}, {x: 8, y: 91}, {x: 9, y: 93}, {x: 10, y: 95},
+            {x: 11, y: 96}, {x: 12, y: 97}
+        ];
+
+        const irregularDataPoints = [
+            {x: 0, y: 10},
+            {x: 1, y: 20},
+            {x: 2, y: 18},
+            {x: 3, y: 28},
+            {x: 4.5, y: 25},
+            {x: 6, y: 35},
+            {x: 8, y: 32},
+            {x: 10, y: 40},
+            {x: 12, y: 38}
+        ];
+
+        // Turnover cycle wave (28-day cycle visualized over 12 months)
+        function generateTurnoverData() {
+            const data = [];
+            for (let i = 0; i <= 12; i += 0.25) {
+                // ~28 day cycle = ~1 month cycle
+                const val = (Math.sin(i * Math.PI * 2) * 8) + 18;
+                data.push({x: i, y: Math.max(5, val)});
+            }
+            return data;
+        }
+
+        // --- Chart Initialization ---
+        let cycleChart;
+        let irregularVisible = false;
+
+        function initChart() {
+            const ctx = document.getElementById('cycleChart').getContext('2d');
+
+            cycleChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    datasets: [
+                        {
+                            label: '理想的な改善（週1→月2→月1）',
+                            data: idealDataPoints,
+                            borderColor: '#8FBCB9',
+                            backgroundColor: 'rgba(143, 188, 185, 0.15)',
+                            borderWidth: 3,
+                            tension: 0.4,
+                            fill: true,
+                            pointBackgroundColor: '#FFF',
+                            pointBorderColor: '#8FBCB9',
+                            pointBorderWidth: 2,
+                            pointRadius: 5,
+                            pointHoverRadius: 8,
+                            yAxisID: 'y',
+                            order: 1
+                        },
+                        {
+                            label: '間隔が乱れた場合',
+                            data: irregularDataPoints,
+                            borderColor: '#9CA3AF',
+                            borderDash: [6, 4],
+                            backgroundColor: 'transparent',
+                            borderWidth: 2,
+                            tension: 0.4,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#E5E7EB',
+                            hidden: true,
+                            yAxisID: 'y',
+                            order: 2
+                        },
+                        {
+                            label: 'ターンオーバー周期',
+                            data: generateTurnoverData(),
+                            borderColor: 'rgba(196, 149, 106, 0.3)',
+                            backgroundColor: 'rgba(196, 149, 106, 0.08)',
+                            borderWidth: 0,
+                            fill: true,
+                            tension: 0.5,
+                            pointRadius: 0,
+                            yAxisID: 'yTurnover',
+                            order: 3
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(93, 74, 60, 0.9)',
+                            titleFont: { family: "'Noto Sans JP', sans-serif" },
+                            bodyFont: { family: "'Noto Sans JP', sans-serif" },
+                            cornerRadius: 8,
+                            padding: 12,
+                            callbacks: {
+                                title: function(items) {
+                                    if (items.length > 0) {
+                                        const month = items[0].parsed.x;
+                                        if (month === 0) return '初回';
+                                        return month + 'ヶ月目';
+                                    }
+                                    return '';
+                                },
+                                label: function(context) {
+                                    if (context.dataset.yAxisID === 'yTurnover') return null;
+                                    return context.dataset.label.split('（')[0] + ': ' + Math.round(context.parsed.y) + '%';
+                                }
+                            }
+                        },
+                        annotation: {
+                            annotations: {
+                                halfYearLine: {
+                                    type: 'line',
+                                    xMin: 6,
+                                    xMax: 6,
+                                    yMin: 0,
+                                    yMax: 110,
+                                    borderColor: 'rgba(196, 149, 106, 0.5)',
+                                    borderWidth: 2,
+                                    borderDash: [4, 4],
+                                    label: {
+                                        display: true,
+                                        content: '効果実感ライン',
+                                        position: 'start',
+                                        backgroundColor: 'rgba(196, 149, 106, 0.85)',
+                                        color: 'white',
+                                        font: { size: 11, family: "'Noto Sans JP', sans-serif", weight: 'bold' },
+                                        padding: { x: 8, y: 4 },
+                                        borderRadius: 4
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            type: 'linear',
+                            min: 0,
+                            max: 12,
+                            ticks: {
+                                stepSize: 1,
+                                callback: function(value) {
+                                    if (value === 0) return '初回';
+                                    if (Number.isInteger(value)) return value + 'ヶ月';
+                                    return '';
+                                },
+                                font: { family: "'Noto Sans JP', sans-serif", size: 11 },
+                                color: '#7A6E65',
+                                maxRotation: 0
+                            },
+                            grid: {
+                                display: true,
+                                color: 'rgba(143, 188, 185, 0.08)',
+                            }
+                        },
+                        y: {
+                            min: 0,
+                            max: 110,
+                            display: true,
+                            position: 'left',
+                            ticks: {
+                                callback: function(value) {
+                                    if (value <= 100 && value % 25 === 0) return value + '%';
+                                    return '';
+                                },
+                                font: { family: "'Noto Sans JP', sans-serif", size: 10 },
+                                color: '#A39890'
+                            },
+                            grid: {
+                                color: 'rgba(143, 188, 185, 0.08)',
+                            },
+                            title: {
+                                display: true,
+                                text: 'シミ改善度',
+                                font: { family: "'Noto Sans JP', sans-serif", size: 11 },
+                                color: '#7A6E65'
+                            }
+                        },
+                        yTurnover: {
+                            position: 'right',
+                            min: 0,
+                            max: 100,
+                            display: false,
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+            updatePhase(0);
+        }
+
+        // --- Phase Update ---
+        function updatePhase(phaseIndex) {
+            document.querySelectorAll('.phase-card').forEach((btn, idx) => {
+                if (idx === phaseIndex) {
+                    btn.classList.add('active-phase');
+                    btn.style.borderColor = 'var(--primary-light)';
+                } else {
+                    btn.classList.remove('active-phase');
+                    btn.style.borderColor = 'var(--primary-pale)';
+                }
+            });
+
+            const data = phaseDetails[phaseIndex];
+            document.getElementById('detail-title').innerText = data.title;
+            document.getElementById('detail-text').innerText = data.desc;
+            document.getElementById('detail-point').innerHTML = data.point;
+            document.getElementById('detail-menu').innerText = data.menu;
+
+            // Update highlight box
+            const annotations = cycleChart.options.plugins.annotation.annotations;
+            annotations.highlightBox = {
+                type: 'box',
+                xMin: data.highlightRange.min,
+                xMax: data.highlightRange.max,
+                yMin: 0,
+                yMax: 110,
+                backgroundColor: 'rgba(143, 188, 185, 0.1)',
+                borderColor: 'transparent'
+            };
+
+            cycleChart.update();
+        }
+
+        // --- Toggle Irregular Dataset ---
+        function toggleIrregularDataset() {
+            irregularVisible = !irregularVisible;
+            const toggleEl = document.getElementById('toggle-switch');
+            toggleEl.classList.toggle('active', irregularVisible);
+            cycleChart.setDatasetVisibility(1, irregularVisible);
+            cycleChart.update();
+        }
+
+        // --- Scroll Animation ---
+        function animateSections() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('fade-in-up');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('section').forEach(section => {
+                observer.observe(section);
+            });
+        }
+
+        // --- Init ---
+        window.addEventListener('DOMContentLoaded', () => {
+            initChart();
+            animateSections();
+        });
+    </script>
+</body>
+</html>
