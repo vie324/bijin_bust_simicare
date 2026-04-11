@@ -408,7 +408,7 @@
                             </div>
                             <h4 class="font-bold text-lg relative z-10" style="color: var(--warm-brown);">土台改善・排出促進期</h4>
                             <p class="text-xs mt-1 relative z-10" style="color: var(--text-muted);">蓄積メラニンを分解し、排出サイクルを始動</p>
-                            <div class="mt-2 text-xs font-bold inline-block px-2 py-1 rounded relative z-10" style="color: var(--primary-dark); background: var(--primary-pale);">来店目安: 週に1回</div>
+                            <div class="mt-2 text-xs font-bold inline-block px-2 py-1 rounded relative z-10" style="color: var(--primary-dark); background: var(--primary-pale);">来店目安: 2週間に1回</div>
                         </button>
 
                         <button onclick="updatePhase(1)" id="btn-phase-2" class="phase-card w-full text-left p-4 rounded-xl border transition" style="border-color: var(--primary-pale);">
@@ -418,7 +418,7 @@
                             </div>
                             <h4 class="font-bold text-lg relative z-10" style="color: var(--warm-brown);">肌質改善・透明感アップ期</h4>
                             <p class="text-xs mt-1 relative z-10" style="color: var(--text-muted);">肌表面にシミが浮き上がり、薄くなる変化を実感</p>
-                            <div class="mt-2 text-xs font-bold inline-block px-2 py-1 rounded relative z-10" style="color: var(--primary-dark); background: var(--primary-pale);">来店目安: 月に2回</div>
+                            <div class="mt-2 text-xs font-bold inline-block px-2 py-1 rounded relative z-10" style="color: var(--primary-dark); background: var(--primary-pale);">来店目安: 2週間〜1ヶ月に1回</div>
                         </button>
 
                         <button onclick="updatePhase(2)" id="btn-phase-3" class="phase-card w-full text-left p-4 rounded-xl border transition" style="border-color: var(--primary-pale);">
@@ -428,7 +428,7 @@
                             </div>
                             <h4 class="font-bold text-lg relative z-10" style="color: var(--warm-brown);">定着・再発予防期</h4>
                             <p class="text-xs mt-1 relative z-10" style="color: var(--text-muted);">残存メラニンをケアし、再発を防止</p>
-                            <div class="mt-2 text-xs font-bold inline-block px-2 py-1 rounded relative z-10" style="color: var(--primary-dark); background: var(--primary-pale);">来店目安: 週1回→月に2回</div>
+                            <div class="mt-2 text-xs font-bold inline-block px-2 py-1 rounded relative z-10" style="color: var(--primary-dark); background: var(--primary-pale);">来店目安: 2週間〜1ヶ月に1回</div>
                         </button>
 
                         <!-- Toggle for irregular pattern -->
@@ -507,14 +507,26 @@
                         お肌の状態に合わせた最適なプランをご提案いたします。<br>
                         初回カウンセリングで、あなただけのシミケアロードマップを作成します。
                     </p>
-                    <a href="https://beauty.hotpepper.jp/kr/slnH000740414/coupon/" target="_blank"
-                       class="inline-flex items-center gap-2 text-white font-bold px-8 py-3 rounded-full transition-all duration-300 hover:opacity-90 hover:shadow-lg"
-                       style="background: linear-gradient(135deg, var(--primary), var(--primary-dark));">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                        </svg>
-                        ご予約・クーポンはこちら
-                    </a>
+                    <p class="text-xs mb-4" style="color: var(--text-light);">店舗を選択してご予約ください</p>
+                    <div class="flex flex-col sm:flex-row gap-3 justify-center items-center">
+                        <a href="https://beauty.hotpepper.jp/kr/slnH000740414/coupon/" target="_blank"
+                           class="inline-flex items-center gap-2 text-white font-bold px-8 py-3 rounded-full transition-all duration-300 hover:opacity-90 hover:shadow-lg w-full sm:w-auto justify-center"
+                           style="background: linear-gradient(135deg, var(--primary), var(--primary-dark));">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
+                            表参道店のご予約
+                        </a>
+                        <!-- TODO: 那覇店のHotPepper BeautyのURLが確定次第、href を差し替えてください -->
+                        <a href="#" target="_blank"
+                           class="inline-flex items-center gap-2 text-white font-bold px-8 py-3 rounded-full transition-all duration-300 hover:opacity-90 hover:shadow-lg w-full sm:w-auto justify-center"
+                           style="background: linear-gradient(135deg, var(--accent), var(--accent-light));">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
+                            那覇店のご予約
+                        </a>
+                    </div>
                 </div>
             </section>
 
@@ -531,7 +543,7 @@
         const phaseDetails = [
             {
                 title: "土台改善・排出促進期：蓄積色素へのアプローチ",
-                desc: "シミの正体は、基底層のメラノサイトが過剰に生成したメラニン色素の蓄積です。この時期はNIR（近赤外線）照射で真皮層まで到達し、深部に沈着したメラニン顆粒を微細に分解。同時に光フォト（IPL）が表皮のメラニンに吸収され、熱変性させて排出を促します。週1回の施術でターンオーバー（約28日周期）を活性化し、メラニンの「つくる→溜まる→排出する」サイクルを正常化させます。",
+                desc: "シミの正体は、基底層のメラノサイトが過剰に生成したメラニン色素の蓄積です。この時期はNIR（近赤外線）照射で真皮層まで到達し、深部に沈着したメラニン顆粒を微細に分解。同時に光フォト（IPL）が表皮のメラニンに吸収され、熱変性させて排出を促します。2週間に1回の施術でターンオーバー（約28日周期）を活性化し、メラニンの「つくる→溜まる→排出する」サイクルを正常化させます。",
                 menu: "徹底シミケア × 光フォト（トリプルアプローチ）",
                 point: "初回〜4回目：カウンセリングでシミの種類（老人性色素斑・炎症後色素沈着・肝斑など）を見極め、最適な出力設定でペンシル＋光フォト+NIRを照射。<br>当サロンでは外側からのケアだけでなく、インナーケアも大切にしています。<br>3ヶ月を目安に必要な栄養素をしっかり補いながら体質改善を行い、お肌の土台から整えていきます。内側の環境が整うことでターンオーバーが正常化し、シミができにくく、透明感のあるお肌へ導きます。",
                 highlightRange: { min: 0, max: 2 }
@@ -545,9 +557,9 @@
             },
             {
                 title: "定着・再発予防期：残存メラニンケアと再発防止",
-                desc: "13回目以降：光フォトで残存メラニンを定期的にケアしつつ、小顔コルギでリンパの流れを改善し老廃物の排出を促進。紫外線量が増える春〜夏は月2回のケアで、メラノサイトの活性化を先回りして抑えるのが効果的です。インナーケアとホームケアを継続することで、外側のケアだけでは難しい根本的な肌質改善を目指します。",
+                desc: "13回目以降：光フォトで残存メラニンを定期的にケアしつつ、小顔コルギでリンパの流れを改善し老廃物の排出を促進。紫外線量が増える春〜夏は2週間〜1ヶ月に1回のケアで、メラノサイトの活性化を先回りして抑えるのが効果的です。インナーケアとホームケアを継続することで、外側のケアだけでは難しい根本的な肌質改善を目指します。",
                 menu: "シミケア ＋ 小顔コルギ ＋ 光フォト",
-                point: "13回目以降：光フォトで残存メラニンを定期的にケアしつつ、小顔コルギでリンパの流れを改善し老廃物の排出を促進。紫外線量が増える春〜夏は月2回のケアで、メラノサイトの活性化を先回りして抑えるのが効果的です。<br>インナーケアとホームケアを継続することで、外側のケアだけでは難しい根本的な肌質改善を目指します。",
+                point: "13回目以降：光フォトで残存メラニンを定期的にケアしつつ、小顔コルギでリンパの流れを改善し老廃物の排出を促進。紫外線量が増える春〜夏は2週間〜1ヶ月に1回のケアで、メラノサイトの活性化を先回りして抑えるのが効果的です。<br>インナーケアとホームケアを継続することで、外側のケアだけでは難しい根本的な肌質改善を目指します。",
                 highlightRange: { min: 6, max: 12 }
             }
         ];
@@ -596,7 +608,7 @@
                 data: {
                     datasets: [
                         {
-                            label: '理想的な改善（週1→月2→月1）',
+                            label: '理想的な改善（2週間〜1ヶ月に1回ペース）',
                             data: idealDataPoints,
                             borderColor: '#80D8D1',
                             backgroundColor: 'rgba(128, 216, 209, 0.15)',
